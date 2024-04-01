@@ -23,12 +23,12 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * A framework to run public test cases.
+ * public test case
  *
- * <p>Purdue University -- CS18000 -- Summer 2022</p>
+ * Alston Zhang - zhan4508
  *
- * @author Purdue CS
- * @version June 13, 2022
+ * @author zhan4508
+ * @version v1
  */
 @RunWith(Enclosed.class)
 public class RunLocalTest {
