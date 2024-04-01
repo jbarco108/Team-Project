@@ -1,48 +1,43 @@
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * User
  * <p>
- * Interface for the PlatFormDatabase class, contains all of the basic methods we will implement
+ * Interface for the message class, contains all the basic methods we will implement
  *
  * @author Chethan Adusumilli, cadusumi@purdue.edu
  * @version 1.0
  **/
-public interface Platform{
+public interface Platform {
 
-    // USER RELATED METHODS
-    void addFriend(String username, String friendUsername);
-    void blockFriend(String username, String friendUsername);
-    void removeFriend(String username, String friendUsername);
-    String getName(User user);
-    int getAge(User user);
-    String getLocation(User user);
-    String getHobby(User user);
-    User login(String username, String password);
-    boolean createUser(String username, String password, String name, int age, String location, String hobby);
+    // User methods
+    User createUser(Scanner scanner) throws Exception; //create the user as a user object and adds to users arary
 
-    // DM RELATED METHODS
-    void sendMessage(User sender, User receiver, String message);
-    void blockUser(User currentUser, User userToBlock);
-    void restrictMessage(User currentUser, boolean friendsOnly);
-    boolean hasPermission(User user, String permission);
-    // DATA PERSISTENCE RELATED METHODS
-    void saveUserData();
-    void loadUserData();
-    void storeUser(User newUser);
-    void storeMessage(Message newMessage);
-    void viewMessage(String username);
-    void deleteMessage(String senderUsername, String recieverUsername, String messageContent );
+    void storeUser(User newUser) throws IOException; //store the user in text file
+
+    void addFriend(String username, String friendUsername) throws IOException;//adds friend to specific user array
+
+    void removeFriend(String username, String friendUsername) throws IOException;//removes friend from specific user
+
+    // array
+    void blockUser(String username, String blockUsername) throws IOException;// add user to blocked array
+
+    // Message methods
+    void storeMessage(Message newMessage) throws IOException;//add message to message array and write in text file
+
+    void viewMessages(String username);//reviews text file to retrieve user specific messages
+
+    //delete message from text file and from user array
+    void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException;
 
 
-    // ADDITIONAL METHODS FOR GUI INTERACTION
-    void displayUserProfile(User user);
-    void displayMessage(User sender, User receiver, String message);
+    // Other methods
+    User login(String username, String password); //set the current user as user object already present in text file
 
-    void readUsers();
-    void readMessages();
-   // User login(String username, String password);
-    User findUserByUsername(String username);
-    void rewriteUserFile() throws IOException;
-    void rewriteMessageFile() throws IOException;
+    User findUserByUsername(String username);//find user in users array
+
+    void rewriteUserFile() throws IOException;//rewrites the user objects in text files
+
+    void rewriteMessageFile() throws IOException;//rewrites the message object in text files
 }
