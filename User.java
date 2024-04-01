@@ -1,5 +1,5 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.ArrayList; //Importing arraylist for dynamic manipulation
+import java.util.Scanner; //Importing scanner for input
 
 /**
  * User
@@ -63,12 +63,15 @@ public class User { //User class that consists of the username, password, age, h
     }
 
     public ArrayList<String> getFriends() {
-        return new ArrayList<>(friends); // Return a copy to prevent external modifications
+        return new ArrayList<>(friends); // Return a new friends list of the same type to prevent external changes
+
     }
 
     public ArrayList<String> getBlockedUsers() {
-        return new ArrayList<>(blockedUsers); // Return a copy to prevent external modifications
+        return new ArrayList<>(blockedUsers); // Return a new blockedUsers list of the same type to prevent external
+                                              //changes
     }
+
 
     // Setting the information of the user
     // include setting username, password, age, hobby, and location
@@ -94,7 +97,7 @@ public class User { //User class that consists of the username, password, age, h
 
 
     //Method to change the specific trait of the user
-    public void editUser(String trait) {
+  /*  public void editUser(String trait) { //leave method as we may use for later use
         boolean correctInput = false;
         do {
 
@@ -116,43 +119,48 @@ public class User { //User class that consists of the username, password, age, h
                 System.out.println("Please make a decision!");
             }
 
-
         }while (!correctInput) ;
-    }
+    }*/
 
-    public void addFriend(String username) {
-        if (!friends.contains(username) && !blockedUsers.contains(username)) {
-            friends.add(username);
+    public void addFriend(String friendUsername) { //Method inserted to add friend to users friends list
+        if (blockedUsers.contains(friendUsername)) {
+            System.out.println(friendUsername + " is blocked and cannot be added as a friend.");
+            return;
+        }
+        if (!friends.contains(friendUsername)) {
+            friends.add(friendUsername);
+            System.out.println(friendUsername + " added as a friend.");
+        } else {
+            System.out.println(friendUsername + " is already a friend.");
+        }
+    }
+    public void removeFriend(String friendUsername) { //Method inserted to remove a friend from users friends list
+        if (friends.contains(friendUsername)) {
+            friends.remove(friendUsername);
         }
     }
 
-    //add a flag if successsfull
 
-    public void removeFriend(String username) {
-        friends.remove(username);
-    }
-
-
-    public void blockUser(String username) {
+    public void blockUser(String username) { // Method inserted to add a user to the blocked list if not already
         if (!blockedUsers.contains(username)) {
             blockedUsers.add(username);
-            friends.remove(username);
+            removeFriend(username); // This ensures the user is removed from friends list as well
         }
     }
+    public String toFileString() {//This to string is used to lay out the users traits and specific friends and blocked
+        // Basic user info
+        String basicInfo = String.join(",", username, password, String.valueOf(age), hobby, location);
+        // The string.join method adds a comma between each variable
 
-    public String toFileString() {
-        String friendsStr = String.join(";", friends);
-        String blockedStr = String.join(";", blockedUsers);
+        // Friends and blocked users, separated by special markers, that is ";"
+        //Friends are identified off by the friends keyword
 
-        // Ensure to only append non-empty strings for friends and blocked users
-        String result = username + "," + password + "," + age + "," + hobby + "," + location;
-        if (!friends.isEmpty()){
-            result += "," + friendsStr;
-        }
-        if (!blockedUsers.isEmpty()){
-            result += "," + blockedStr;
-        }
-        return result;
+        String friendsStr = "friends:" + String.join(";", friends);
+
+        //Blocked users are identified by the blocked keyword
+        String blockedUsersStr = "blocked:" + String.join(";", blockedUsers);
+
+        return String.join(",", basicInfo, friendsStr, blockedUsersStr);
     }
 
 }
