@@ -10,7 +10,7 @@ import java.util.Scanner; //Importing scanner for input
  * @author Jorge Barco, barco0@purdue.edu
  * @version 1.0
  */
-public class User { //User class that consists of the username, password, age, hobby
+public class User implements UserClassInterface { //User class that consists of the username, password, age, hobby
     //location, specific friends, and specific blocked friends
     private String username;
     private String password;
@@ -94,7 +94,7 @@ public class User { //User class that consists of the username, password, age, h
     public void setLocation(String location) {
         this.location = location;
     }
-    
+
     public void addFriend(String friendUsername) { //Method inserted to add friend to users friends list
         if (blockedUsers.contains(friendUsername)) {
             System.out.println(friendUsername + " is blocked and cannot be added as a friend.");
@@ -138,3 +138,4 @@ public class User { //User class that consists of the username, password, age, h
 
     }
 }
+
