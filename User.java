@@ -11,7 +11,7 @@ import java.util.Scanner; //Importing scanner for input
  * @version 1.0
  */
 public class User { //User class that consists of the username, password, age, hobby
-                    //location, specific friends, and specific blocked friends
+    //location, specific friends, and specific blocked friends
     private String username;
     private String password;
     private int age;
@@ -69,7 +69,7 @@ public class User { //User class that consists of the username, password, age, h
 
     public ArrayList<String> getBlockedUsers() {
         return new ArrayList<>(blockedUsers); // Return a new blockedUsers list of the same type to prevent external
-                                              //changes
+        //changes
     }
 
 
@@ -94,34 +94,7 @@ public class User { //User class that consists of the username, password, age, h
     public void setLocation(String location) {
         this.location = location;
     }
-
-
-    //Method to change the specific trait of the user
-  /*  public void editUser(String trait) { //leave method as we may use for later use
-        boolean correctInput = false;
-        do {
-
-            System.out.println("What would you like to change?");
-            Scanner scanner = new Scanner(System.in);
-            trait = scanner.nextLine();
-
-
-            if (trait.equalsIgnoreCase("age")) {
-                this.age = Integer.parseInt(trait);
-                correctInput = true;
-            } else if (trait.equalsIgnoreCase("hobby")) {
-                this.hobby = trait;
-                correctInput = true;
-            } else if (trait.equalsIgnoreCase("location")) {
-                this.location = trait;
-                correctInput = true;
-            } else {
-                System.out.println("Please make a decision!");
-            }
-
-        }while (!correctInput) ;
-    }*/
-
+    
     public void addFriend(String friendUsername) { //Method inserted to add friend to users friends list
         if (blockedUsers.contains(friendUsername)) {
             System.out.println(friendUsername + " is blocked and cannot be added as a friend.");
@@ -160,7 +133,8 @@ public class User { //User class that consists of the username, password, age, h
         //Blocked users are identified by the blocked keyword
         String blockedUsersStr = "blocked:" + String.join(";", blockedUsers);
 
-        return String.join(",", basicInfo, friendsStr, blockedUsersStr);
-    }
+        return String.join(",", basicInfo, friendsStr, blockedUsersStr); //return a string of the traits,
+        // friends and blocked users all seperated with a comma
 
+    }
 }
