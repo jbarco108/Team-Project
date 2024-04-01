@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @version 1.0
  **/
 
-public class PlatformDatabase { //Constructor of the database
+public class PlatformDatabase implements Platform { //Constructor of the database
     private String userIn; //The source file used to generate the user
     private String messageIn; // The source file for messages
 
@@ -263,8 +263,8 @@ public class PlatformDatabase { //Constructor of the database
             }
         }
     }
-    public void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException
-    {
+
+    public void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException {
         // Identify the message to delete bases on username, receiver and messageContent
         Message messageToDelete = null;
         for (Message message : messages) {//iterate through each massage
