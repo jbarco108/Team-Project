@@ -19,6 +19,31 @@ User Creation: Tested the creation of users with various attributes.
 Friend Management: Tested adding, removing, and blocking friends.
 String Representation: Verified the correct generation of the string representation for file storage.
 
+UserClassInterface Interface
+
+The UserClassInterface interface defines the basic methods that will be implemented by the user class in our Social Media Platform. This interface serves as a contract for classes representing user profiles, ensuring consistency in functionality across different implementations.
+
+getUsername(): Returns the username of the user.
+getPassword(): Returns the password of the user.
+getAge(): Returns the age of the user.
+getHobby(): Returns the hobby of the user.
+getLocation(): Returns the location of the user.
+getFriends(): Returns a list of usernames representing the friends of the user.
+getBlockedUsers(): Returns a list of usernames representing the users blocked by the user.
+
+setUsername(String username): Sets the username of the user.
+setPassword(String password): Sets the password of the user.
+setAge(int age): Sets the age of the user.
+setHobby(String hobby): Sets the hobby of the user.
+setLocation(String location): Sets the location of the user.
+
+addFriend(String friendUsername): Adds a friend to the user's friends list.
+removeFriend(String friendUsername): Removes a friend from the user's friends list.
+blockUser(String username): Blocks a user, removing them from the user's friends list.
+toFileString(): Generates a string representation of the user's profile suitable for storing in a file.
+
+The UserClassInterface provides a standardized set of methods for interacting with user profiles within our Social Media Platform. Implementing classes adhere to this interface to ensure consistent behavior and compatibility with other components of the platform. This promotes code reusability and maintainability throughout the development process.
+
 Message Class
 
 The Message class defines the structure of a message, including its sender, receiver, and actual message content, encapsulating the properties and functionalities related to messages exchanged between users within the social media platform.
@@ -32,6 +57,24 @@ String Representation: Verified the correct generation of the string representat
 
 Relationship to Other Classes:
 User Class: Interacts with the User class to associate senders and receivers of messages.
+
+MessageClassInterface Interface
+
+The MessageClassInterface interface defines the basic methods that will be implemented by the message class in our Social Media Platform. This interface provides a contract for classes that represent messages exchanged between users.
+
+Methods:
+
+getMessageToBeSent(): Returns the content of the message to be sent.
+getReciever(): Returns the recipient of the message.
+getSender(): Returns the sender of the message.
+
+setMessageToBeSent(String messageToBeSent): Sets the content of the message to be sent.
+setSender(User sender): Sets the sender of the message.
+setReciever(User reciever): Sets the recipient of the message.
+setSendSuccessful(boolean sendSuccessful): Sets whether the message was sent successfully or not.
+toMessageFileString(): Generates a string representation of the message suitable for storing in a file.
+
+The MessageClassInterface provides a blueprint for implementing message-related functionalities within our Social Media Platform. Classes that implement this interface will adhere to a standardized set of methods for managing and interacting with messages. This ensures consistency and interoperability across different components of the platform.
 
 PlatformDatabase Class
 
