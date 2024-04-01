@@ -115,14 +115,14 @@ public class User implements UserClassInterface { //User class that consists of 
     }
 
 
-    public void blockUser(String username) { // Method inserted to add a user to the blocked list if not already
-        if (!blockedUsers.contains(username)) {
-            blockedUsers.add(username);
-            removeFriend(username); // This ensures the user is removed from friends list as well
+    public void blockUser(String blockedUsername) { // Method inserted to add a user to the blocked list if not already
+        if (!blockedUsers.contains(blockedUsername)) {
+            blockedUsers.add(blockedUsername);
+            removeFriend(blockedUsername); // This ensures the user is removed from friends list as well
         }
     }
 
-    public String toFileString() {//This to string is used to lay out the users traits and specific friends and blocked
+    public String toFileString() { //This to string is used to lay out the users traits and specific friends and blocked
         // Basic user info
         String basicInfo = String.join(",", username, password, String.valueOf(age), hobby, location);
         // The string.join method adds a comma between each variable
@@ -140,4 +140,3 @@ public class User implements UserClassInterface { //User class that consists of 
 
     }
 }
-
