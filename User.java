@@ -1,5 +1,4 @@
-import java.util.ArrayList; //Importing arraylist for dynamic manipulation
-import java.util.Scanner; //Importing scanner for input
+import java.util.ArrayList;
 
 /**
  * User
@@ -107,6 +106,7 @@ public class User implements UserClassInterface { //User class that consists of 
             System.out.println(friendUsername + " is already a friend.");
         }
     }
+
     public void removeFriend(String friendUsername) { //Method inserted to remove a friend from users friends list
         if (friends.contains(friendUsername)) {
             friends.remove(friendUsername);
@@ -120,6 +120,7 @@ public class User implements UserClassInterface { //User class that consists of 
             removeFriend(username); // This ensures the user is removed from friends list as well
         }
     }
+
     public String toFileString() {//This to string is used to lay out the users traits and specific friends and blocked
         // Basic user info
         String basicInfo = String.join(",", username, password, String.valueOf(age), hobby, location);
