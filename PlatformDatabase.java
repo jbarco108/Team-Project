@@ -192,6 +192,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         User user = findUserByUsername(username);
         User friend = findUserByUsername(friendUsername);
 
+
         if (user == null || friend == null) {
             System.out.println("Either the user or the friend does not exist.");
             return; // Exit if either user is not found
@@ -200,6 +201,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         if (!user.getFriends().contains(friendUsername) && !user.getBlockedUsers().contains(friendUsername)) {
             user.addFriend(friendUsername);
             friend.addFriend(username); // Assuming mutual friendship it adds friend to both users
+            System.out.println(friendUsername + " was added");
             rewriteUserFile(); // Reflect changes in the file
         }
     }
@@ -213,6 +215,8 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         if (user != null && friend != null) {
             user.removeFriend(friendUsername);
             friend.removeFriend(username); // Assuming mutual friendship removal
+            System.out.println(friendUsername + " was removed");
+
             rewriteUserFile(); // Rewrites the change in the account file
         }
 
@@ -226,6 +230,8 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
 
         if (user != null && blockedUser != null) {
             user.blockUser(blockUsername);
+            System.out.println(blockUsername + " was blocked");
+
         } else {
             System.out.println("User does not exist");
         }
@@ -307,7 +313,6 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         User currentUser = null;
 
         //If user decides to log in, they must present the username and password to continue into the user
-
 
         if (initialChoice == 1) {
             System.out.println("Enter username:");
@@ -434,3 +439,4 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         System.out.println("Thank you for using the platform. Goodbye!");
     }
 }
+
