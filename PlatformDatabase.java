@@ -32,7 +32,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         //to messages list
     }
 
-    public void readUsers() {//Method to read each line in text file and construct User objects
+    public void readUsers() { //Method to read each line in text file and construct User objects
 
         this.users.clear(); // Clear existing users
 
@@ -45,9 +45,9 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
 
                 if (parts.length >= 7) { // Ensure all parts including friends and blocked are present
                     String username = parts[0].trim(); //Username is first field
-                    String password = parts[1].trim();//Password is second field
+                    String password = parts[1].trim(); //Password is second field
                     int age = Integer.parseInt(parts[2].trim()); //Age is third field
-                    String hobby = parts[3].trim();//Hobby is 4th field
+                    String hobby = parts[3].trim(); //Hobby is 4th field
                     String location = parts[4].trim(); //Location is 5th field
                     User user = new User(username, password, age, hobby, location); //Construct user object
 
@@ -55,16 +55,16 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
                     if (parts[5].startsWith("friends:") && !parts[5].substring(8).isEmpty()) { //Check if
                         //friends segment has users
 
-                        String[] friends = parts[5].substring(8).split(";");//List of friends array is
+                        String[] friends = parts[5].substring(8).split(";"); //List of friends array is
                         //created and split between each user, begins after the word "friends:"
 
-                        for (String friend : friends) user.addFriend(friend.trim());//line to append the string of
+                        for (String friend : friends) user.addFriend(friend.trim()); //line to append the string of
                         // friends to the users friends
 
                     }
 
                     // Parse blocked users if present
-                    if (parts[6].startsWith("blocked:") && !parts[6].substring(8).isEmpty()) { // Check to
+                    if (parts[6].startsWith("blocked:") && !parts[6].substring(8).isEmpty()) { //Check to
                         // make sure the user has blocked friends and is not empty, beings after the word "blocked:
 
                         String[] blockedUsers = parts[6].substring(8).split(";"); //List of blocked
@@ -88,7 +88,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 3) {//seperate each line by sender,receiver, and content
+                if (parts.length >= 3) { //seperate each line by sender,receiver, and content
                     User sender = findUserByUsername(parts[0].trim());
                     User receiver = findUserByUsername(parts[1].trim());
                     String content = parts[2].trim();
@@ -270,10 +270,11 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
     }
 
-    public void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException {
+    public void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException
+    {
         // Identify the message to delete bases on username, receiver and messageContent
         Message messageToDelete = null;
-        for (Message message : messages) {//iterate through each massage
+        for (Message message : messages) { //iterate through each massage
             if (message.getSender().getUsername().equals(senderUsername) &&
                     message.getReceiver().getUsername().equals(receiverUsername) &&
                     message.getMessageToBeSent().equals(messageContent)) {
@@ -378,7 +379,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
                     db.removeFriend(currentUser.getUsername(), friendUsername);
 
                     break;
-                case 3: // Block a user
+                case 3: //Block a user
 
                     //Receive a username
                     System.out.println("Enter the username of the user to block:");
@@ -401,7 +402,8 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
                     String messageContent = scanner.nextLine();
 
                     //Create the message object from the user input of the user and content
-                    Message message = new Message(currentUser, db.findUserByUsername(receiverUsername), messageContent);
+                    Message message = new Message
+                            (currentUser, db.findUserByUsername(receiverUsername), messageContent);
                     db.storeMessage(message); //storeMessage method to add the message in the text file, in the
                     // format sender, receiver, and content
 
@@ -412,7 +414,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
                     // the user
                     break;
 
-                case 6://Delete a message
+                case 6: //Delete a message
                     //Receive the user whose message you want to delete
                     System.out.println("Enter the username of the receiver:");
                     String receiver = scanner.nextLine();
@@ -421,12 +423,12 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
                     System.out.println("Enter your message:");
                     String words = scanner.nextLine();
 
-                    db.deleteMessage(currentUser.getUsername(), receiver, words);//Method to delete the message from
+                    db.deleteMessage(currentUser.getUsername(), receiver, words); //Method to delete the message from
                     //the message list in the database while deleting message object in the text file
 
                     break;
 
-                case 7: // Exit the program
+                case 7: //Exit the program
                     running = false;
                     break;
 
@@ -439,4 +441,3 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         System.out.println("Thank you for using the platform. Goodbye!");
     }
 }
-
