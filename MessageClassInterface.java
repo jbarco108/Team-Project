@@ -7,9 +7,9 @@
  * @version 1.0
  **/
 public interface MessageClassInterface {
-    String getMessageToBeSent();//content of message
+    String getMessageToBeSent(); //content of message
 
-    User getReceiver();//retrieve receiver
+    User getReceiver(); //retrieve receiver
 
     User getSender(); //retrive sender
 
@@ -19,7 +19,7 @@ public interface MessageClassInterface {
 
     /* void setReciever(User reciever);*/ //method later to be implemented
 
-    void setSendSuccessful(boolean sendSuccessful);//boolean condition for messages
+    void setSendSuccessful(boolean sendSuccessful); //boolean condition for messages
 
-    String toMessageFileString();//display the message as a string
+    String toMessageFileString(); //display the message as a string
 }
