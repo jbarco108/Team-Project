@@ -96,15 +96,16 @@ public class User implements UserClassInterface { //User class that consists of 
 
     public void addFriend(String friendUsername) { //Method inserted to add friend to users friends list
         if (blockedUsers.contains(friendUsername)) {
-            System.out.println(friendUsername + " is blocked and cannot be added as a friend.");
+            //System.out.println(friendUsername + " is blocked and cannot be added as a friend.");
             return;
         }
         if (!friends.contains(friendUsername)) {
             friends.add(friendUsername);
-            System.out.println(friendUsername + " added as a friend.");
-        } else {
-            System.out.println(friendUsername + " is already a friend.");
+            //System.out.println(friendUsername + " added as a friend.");
         }
+
+        // System.out.println(friendUsername + " is already a friend.");
+
     }
 
     public void removeFriend(String friendUsername) { //Method inserted to remove a friend from users friends list
