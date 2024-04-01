@@ -1,6 +1,6 @@
 Team Project
 
-To run this project, please compile all the classes and run the MainMethod class. Before doing this, please create completely blank files Accounts.txt and Messages.txt.It will give a main method error if it is not empty before.
+To run this project, please compile all the classes and run the MainMethod class. Before doing this, please create completely blank files Accounts.txt and Messages.txt.It will give a main method error if it is not empty before. To test this project, please use the RunLocalTest class.
 
 Jorge Barco - Submitted Vocareum workspace
 
@@ -154,3 +154,13 @@ Relationship to Other Classes:
 User: Interacts with the User class to handle user-related functionalities such as authentication and friend/block management.
 Message: Utilizes the Message class to create, store, and manage messages exchanged between users.
 PlatformDatabase: Utilizes methods from this class to manage user accounts, messages, and interactions with the database files (Accounts.txt and Messages.txt).
+
+RunLocalTest Class
+
+This class provides how to run automated tests for the Social Media Platform project. It includes instructions on running the tests, an overview of the test cases, and their purposes.The automated tests consist of a set of public test cases designed to verify the functionality and correctness of the Social Media Platform project. These tests cover various aspects of the project, including user creation, message sending, database management, and file reading/writing.
+
+PlatformDatabase Creation: Verifies the creation of the PlatformDatabase object with specified input files.
+User Creation: Ensures that users can be created successfully with the expected attributes.
+Friend and Block Management: Tests the functionality of adding/removing friends and blocking users.
+Message Creation: Validates the creation of messages between users with the correct sender, receiver, and content.
+File Writing: Checks if user and message data is correctly written to the output files.
