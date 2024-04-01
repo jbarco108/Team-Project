@@ -1,6 +1,6 @@
 Team Project
 
-To run this project, please compile all the classes and run the MainMethod class.
+To run this project, please compile all the classes and run the MainMethod class. Before doing this, please create completely blank files Accounts.txt and Messages.txt.It will give a main method error if it is not empty before.
 
 Jorge Barco - Submitted Vocareum workspace
 
@@ -9,7 +9,7 @@ User Class
 The User class represents a user in the social media platform, encapsulating the properties and functionalities related to user profiles within the social media platform such as username, password, age, hobby, location, friends, and blocked users.
 
 Methods: 
-addFriend(String friendUsername): Adds a friend to the user's friends list.
+addFriend(String friendUsername): Adds a friend to the user's friends list. Users who are blocked or already added as friends cannot be added.
 removeFriend(String friendUsername): Removes a friend from the user's friends list.
 blockUser(String username): Blocks a user, removing them from the user's friends list.
 toFileString(): Generates a string representation of the user's profile suitable for storing in the user file.
@@ -25,10 +25,10 @@ The Message class defines the structure of a message, including its sender, rece
 
 Method:
 toMessageFileString(): Generates a string representation of the message suitable for storing in the message file, containing sender, receiver, and message content.
-String Representation: Verified the correct generation of the string representation for file storage.
 
 Testing:
 Message Creation: Tested the creation of messages using both default and parameterized constructors with various message content, sender, and receiver combinations.
+String Representation: Verified the correct generation of the string representation for file storage.
 
 Relationship to Other Classes:
 User Class: Interacts with the User class to associate senders and receivers of messages.
