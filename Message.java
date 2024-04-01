@@ -48,4 +48,8 @@ public class Message {
     public void setSendSuccessful(boolean sendSuccessful) {
         this.sendSuccessful = sendSuccessful;
     }
+
+    public String toMessageFileString() {
+        return String.format(sender.getUsername() + "," + receiver.getUsername() + "," + messageToBeSent + ",");
+    }
 }
