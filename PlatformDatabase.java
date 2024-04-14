@@ -294,6 +294,14 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
     }
 
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in); //import scanner in class
 
