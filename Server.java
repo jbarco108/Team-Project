@@ -5,7 +5,6 @@ import java.util.*;
 
 public class Server implements Runnable {
     Socket socket;
-
     public Server(Socket socket) {
         this.socket = socket;
     }
