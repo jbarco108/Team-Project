@@ -84,14 +84,27 @@ public class Server implements Runnable {
 
                         //Run the database add friend method to add a friend in the currentUsers friend list,
                         //this also adds the friend from the text file corresponding to the user
-
+                        //CHANGED BY ALSTON | REREAD ALL USER/MESSAGE DATA BEFORE MAKING CALLS
+                        db.rewriteUserFile();
+                        db.rewriteMessageFile();
+                        db.readUsers();
+                        db.readMessages();
+                        // ---------------
                         db.addFriend(currentUser.getUsername(), friendUsername);
                         break;
 
 
                     case 2: // Remove a friend
 
+                        //CHANGED BY ALSTON | REREAD ALL USER/MESSAGE DATA BEFORE MAKING CALLS
+                        db.rewriteUserFile();
+                        db.rewriteMessageFile();
+                        db.readUsers();
+                        db.readMessages();
+                        // ---------------
+
                         //Receive friends username
+
                         System.out.println("Enter the username of the friend to remove:");
                         friendUsername = scanner.nextLine();
 
@@ -101,6 +114,13 @@ public class Server implements Runnable {
 
                         break;
                     case 3: //Block a user
+
+                        //CHANGED BY ALSTON | REREAD ALL USER/MESSAGE DATA BEFORE MAKING CALLS
+                        db.rewriteUserFile();
+                        db.rewriteMessageFile();
+                        db.readUsers();
+                        db.readMessages();
+                        // ---------------
 
                         //Receive a username
                         System.out.println("Enter the username of the user to block:");
@@ -113,6 +133,13 @@ public class Server implements Runnable {
 
 
                     case 4: // Send a message
+
+                        //CHANGED BY ALSTON | REREAD ALL USER/MESSAGE DATA BEFORE MAKING CALLS
+                        db.rewriteUserFile();
+                        db.rewriteMessageFile();
+                        db.readUsers();
+                        db.readMessages();
+                        // ---------------
 
                         //Receive the username of the directed user
                         System.out.println("Enter the username of the receiver:");
@@ -131,11 +158,27 @@ public class Server implements Runnable {
 
                         break;
                     case 5: // View messages
+
+                        //CHANGED BY ALSTON | REREAD ALL USER/MESSAGE DATA BEFORE MAKING CALLS
+                        db.rewriteUserFile();
+                        db.rewriteMessageFile();
+                        db.readUsers();
+                        db.readMessages();
+                        // ---------------
+
                         db.viewMessages(currentUser.getUsername()); //Method to retreive all the messages that involve
                         // the user
                         break;
 
                     case 6: //Delete a message
+
+                        //CHANGED BY ALSTON | REREAD ALL USER/MESSAGE DATA BEFORE MAKING CALLS
+                        db.rewriteUserFile();
+                        db.rewriteMessageFile();
+                        db.readUsers();
+                        db.readMessages();
+                        // ---------------
+
                         //Receive the user whose message you want to delete
                         System.out.println("Enter the username of the receiver:");
                         String receiver = scanner.nextLine();
