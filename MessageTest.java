@@ -71,14 +71,7 @@ public class MessageTest {
             assertTrue("Send should be successful with parameterized constructor", message.sendSuccessful);
         }
 
-        @Test
-        public void testDefaultConstructor() {
-            Message defaultMsg = new Message();
-            assertNull("Default constructor should set sender to null", defaultMsg.getSender());
-            assertNull("Default constructor should set receiver to null", defaultMsg.getReceiver());
-            assertEquals("Default constructor should set message to invalid string", "%%INVALID_STRING%%", defaultMsg.getMessageToBeSent());
-            assertFalse("Send should not be successful with default constructor", defaultMsg.sendSuccessful);
-        }
+
 
         @Test
         public void testGetters() {

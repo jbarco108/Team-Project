@@ -12,12 +12,7 @@ public class Message implements MessageClassInterface {
     private User sender; //user class ; who sent the message
     private User receiver; //user class ; who is the receiver of the message
 
-    public Message() { //default constructor and sets invalid if null inputs
-        this.messageToBeSent = "%%INVALID_STRING%%";
-        this.sendSuccessful = false;
-        this.sender = null;
-        this.receiver = null;
-    }
+
 
     public Message(User sender, User receiver, String message) { //intended constructor.
         this.sendSuccessful = true;
