@@ -71,6 +71,8 @@ public class Client {
             client.close();
 
              */
+
+            //client implementation by Alston Zhang
             Client client = new Client("localhost", 4343);
             Scanner scanner = new Scanner(System.in); //import scanner in class
 
