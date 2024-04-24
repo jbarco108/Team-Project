@@ -108,18 +108,27 @@ public class User implements UserClassInterface { //User class that consists of 
 
     }
 
-    public void removeFriend(String friendUsername) { //Method inserted to remove a friend from users friends list
+    public void removeFriend(String friendUsername) {
         if (friends.contains(friendUsername)) {
             friends.remove(friendUsername);
         }
     }
 
 
-    public void blockUser(String blockedUsername) { // Method inserted to add a user to the blocked list if not already
+    public void blockUser(String blockedUsername) {
         if (!blockedUsers.contains(blockedUsername)) {
             blockedUsers.add(blockedUsername);
-            removeFriend(blockedUsername); // This ensures the user is removed from friends list as well
+            removeFriend(blockedUsername); // Also removes from friends if present
         }
+    }
+
+    public void displayProfile() {
+        System.out.println("Username: " + getUsername());
+        System.out.println("Age: " + getAge());
+        System.out.println("Hobby: " + getHobby());
+        System.out.println("Location: " + getLocation());
+        System.out.println("Friends: " + String.join(", ", friends));
+        System.out.println("Blocked Users: " + String.join(", ", blockedUsers));
     }
 
     public String toFileString() { //This to string is used to lay out the users traits and specific friends and blocked
