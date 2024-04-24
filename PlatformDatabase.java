@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 /**
  * User
@@ -16,23 +18,23 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
     private String userIn; //The source file used to generate the user
     private String messageIn; // The source file for messages
 
-    private ArrayList<User> users = new ArrayList<>(); // Initialized as empty list for users
-    private ArrayList<Message> messages = new ArrayList<>(); //Initialized as empty list for messages
+    private CopyOnWriteArrayList<User> users = new CopyOnWriteArrayList<>(); // Initialized as empty list for users
+    private CopyOnWriteArrayList<Message> messages =  new CopyOnWriteArrayList<>(); //Initialized as empty list for messages
 
 
     // Constructor, getters, and setters would follow
     public PlatformDatabase(String userIn, String messageIn) { //Constructor of the database
         this.userIn = userIn; //Source file for accounts
         this.messageIn = messageIn; //Sources file for messages
-        users = new ArrayList<>(); //Users are initialized as empty list
-        messages = new ArrayList<>(); //Messages are initialized as empty list
+        users = new CopyOnWriteArrayList<>(); //Users are initialized as empty list
+        messages = new CopyOnWriteArrayList<>(); //Messages are initialized as empty list
         readUsers(); //Method in database that reads in Accounts.txt file and constructs users from each line, added
         // to users list
         readMessages(); //Method in databse that read in Messages.txt file and constructs messages from each line, added
         //to messages list
     }
 
-    public void readUsers() { //Method to read each line in text file and construct User objects
+    public synchronized void readUsers() { //Method to read each line in text file and construct User objects
 
         this.users.clear(); // Clear existing users
 
@@ -83,7 +85,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
     }
 
-    public void readMessages() { //Method to read each message in messages.txt
+    public synchronized void readMessages() { //Method to read each message in messages.txt
         try (BufferedReader br = new BufferedReader(new FileReader(messageIn))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -105,7 +107,8 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
     }
 
 
-    public User login(String username, String password) { //Check to make sure user doesn't already exist, if so login
+    public synchronized User login(String username, String password) { //Check to make sure user doesn't already
+        // exist, if so login
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
                 return user;
@@ -114,7 +117,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         return null;
     }
 
-    public User findUserByUsername(String username) { //Method to find users, iterates through users name
+    public synchronized User findUserByUsername(String username) { //Method to find users, iterates through users name
         for (User user : users) {
             if (user.getUsername().equals(username)) {
                 return user;
@@ -124,7 +127,8 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
     }
 
 
-    public void rewriteUserFile() throws IOException { //Overwrites text file to append changes to each user
+    public synchronized void rewriteUserFile() throws IOException { //Overwrites text file to append changes to each
+        // user
         try (PrintWriter writer = new PrintWriter(new FileWriter(userIn, false))) {
             for (User user : users) {
                 writer.println(user.toFileString());
@@ -134,7 +138,8 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
 
     }
 
-    public void rewriteMessageFile() throws IOException { //Overwrites text file to append changes to each message
+    public synchronized void rewriteMessageFile() throws IOException { //Overwrites text file to append changes to each
+        // message
         try (PrintWriter writer = new PrintWriter(new FileWriter(messageIn, false))) {
             for (Message message : messages) {
                 writer.println(message.toMessageFileString());
@@ -144,8 +149,8 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
 
 
     //USER METHODS
-
-    public User createUser(Scanner scanner) throws Exception { //Method to create users if not already found
+    public synchronized User createUser(Scanner scanner) throws Exception { //Method to create users if not already
+        // found
 
         String username = null;
 
@@ -182,12 +187,13 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
     }
 
 
-    public void storeUser(User newUser) throws IOException { //Method to store in user in users array
+    public synchronized void storeUser(User newUser) throws IOException { //Method to store in user in users array
         users.add(newUser);
         rewriteUserFile(); // Now it also updates the file immediately after adding a new users
     }
 
-    public void addFriend(String username, String friendUsername) throws IOException { //Method to add friend to
+    public synchronized void addFriend(String username, String friendUsername) throws IOException { //Method to add
+        // friend to
         // users friend array
         User user = findUserByUsername(username);
         User friend = findUserByUsername(friendUsername);
@@ -206,9 +212,9 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
     }
 
-    public void removeFriend(String username, String friendUsername) throws IOException { //Remove a friend from
+    public synchronized void removeFriend(String username, String friendUsername) throws IOException { //Remove a
+        // friend from
         // users array
-
         User user = findUserByUsername(username);
         User friend = findUserByUsername(friendUsername);
 
@@ -222,41 +228,58 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
 
     }
 
-    public void blockUser(String username, String blockUsername) throws IOException { //Method to remove and block and
+    public synchronized void blockUser(String username, String blockUsername) throws IOException { //Method to remove
+        // and
+        // block and
         //user from their respective arrays
-
         User user = findUserByUsername(username);
         User blockedUser = findUserByUsername(blockUsername);
 
         if (user != null && blockedUser != null) {
             user.blockUser(blockUsername);
+            blockedUser.blockUser(username);
             System.out.println(blockUsername + " was blocked");
 
         } else {
             System.out.println("User does not exist");
         }
-
         rewriteUserFile();
     }
 
 
     //MESSAGE METHODS
 
-    public void storeMessage(Message newMessage) { //Method to store messages in text file
+    public synchronized void storeMessage(Message newMessage) {
+        User receiver = newMessage.getReceiver();
+        User sender = newMessage.getSender();
+
+        // Check if the sender and receiver are friends
+        if (!receiver.getFriends().contains(sender.getUsername()) || !sender.getFriends().contains(receiver.getUsername())) {
+            System.out.println("Cannot send message. Both users must be friends.");
+            return;
+        }
+
+        // Check if the sender is blocked by the receiver
+        if (receiver.getBlockedUsers().contains(sender.getUsername())) {
+            System.out.println("Message cannot be sent. The sender is blocked by the receiver.");
+            return;
+        }
+
+        // Message creation and saving to the text file
         System.out.println("Message created successfully: " + newMessage.getMessageToBeSent());
         try (PrintWriter writer = new PrintWriter(new FileWriter("Messages.txt", true))) {
-            writer.print(newMessage.getSender().getUsername() + ","); // Added separators ","
-            writer.print(newMessage.getReceiver().getUsername() + ","); // write the receiver
-            writer.print(newMessage.getMessageToBeSent() + ","); // write the content
-            writer.println();
-            readMessages();
+            writer.print(newMessage.getSender().getUsername() + ",");
+            writer.print(newMessage.getReceiver().getUsername() + ",");
+            writer.print(newMessage.getMessageToBeSent() + ",");
+            writer.println(); // Ensure a new line is started after each message
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Error reading the message: " + e.getMessage());
+            System.err.println("Error writing the message: " + e.getMessage());
         }
     }
 
-    public void viewMessages(String username) { // View messages according to specific user
+
+
+    public synchronized void viewMessages(String username) { // View messages according to specific user
         System.out.println("Messages for " + username + ":");
         for (Message message : messages) { //iterate through each message ever created and retrieve message specific
             // to user
@@ -270,7 +293,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
     }
 
-    public void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException
+    public synchronized void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException
     {
         // Identify the message to delete bases on username, receiver and messageContent
         Message messageToDelete = null;
@@ -294,158 +317,114 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
     }
 
-    public ArrayList<Message> getMessages() {
-        return messages;
+    public void searchUser(String username) {
+        User user = findUserByUsername(username);
+        if (user != null) {
+            user.displayProfile();
+        } else {
+            System.out.println("User not found.");
+        }
     }
 
-    public ArrayList<User> getUsers() {
-        return users;
-    }
 
     public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in); //import scanner in class
+        Scanner scanner = new Scanner(System.in);
 
         PlatformDatabase db = new PlatformDatabase("Accounts.txt", "Messages.txt");
-        //Database consists of two files already in the system - Accounts & Messages
 
-        //User option for logging in or creating a new user
-
-        System.out.println("Welcome to the platform. Choose an option:");
-        System.out.println("1. Login");
-        System.out.println("2. Create a new user");
-
-        //Receive the choice from the user
-        int initialChoice = scanner.nextInt();
-        scanner.nextLine();
-
-        //Set the user as null into we either create or login
         User currentUser = null;
+        boolean isAuthenticated = false;
 
-        //If user decides to log in, they must present the username and password to continue into the user
+        while (!isAuthenticated) {
+            System.out.println("Welcome to the platform. Choose an option:");
+            System.out.println("1. Login");
+            System.out.println("2. Create a new user");
 
-        if (initialChoice == 1) {
-            System.out.println("Enter username:");
-            String username = scanner.nextLine();
-            System.out.println("Enter password:");
-            String password = scanner.nextLine();
+            int initialChoice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character left after reading int
 
-            //User is returned from Accounts file if the user already exists, that is what the log in method does
-            currentUser = db.login(username, password);
+            if (initialChoice == 1) {
+                System.out.println("Enter username:");
+                String username = scanner.nextLine();
+                System.out.println("Enter password:");
+                String password = scanner.nextLine();
+                currentUser = db.login(username, password);
 
-            //If the user can not be found , print "Login failed. User not found or password incorrect:".
-            if (currentUser == null) {
-                System.out.println("Login failed. User not found or password incorrect.");
-                return;
+                if (currentUser == null) {
+                    System.out.println("Login failed. User not found or password incorrect. Please try again.");
+                } else {
+                    isAuthenticated = true; // Exit the loop if login is successful
+                }
+            } else if (initialChoice == 2) {
+                currentUser = db.createUser(scanner);
+                isAuthenticated = true; // Exit the loop assuming createUser is successful
+            } else {
+                System.out.println("Invalid choice. Please enter 1 or 2.");
             }
-
-            //If user decides to create an account, we implement createUser method which creates a User object
-        } else if (initialChoice == 2) {
-            currentUser = db.createUser(scanner);
         }
 
-        //Flag to continue the application from closing after one round
         boolean running = true;
-
-        // While the currentUser exits and the running flag continues to be true, ask what the user would like to do
         while (running && currentUser != null) {
             System.out.println("Choose an action:");
-            System.out.println("1. Add a friend"); //Add a friend to users friend array while storing in text file
-            System.out.println("2. Remove a friend"); //Remove a friend from users friend array while deleting
-            System.out.println("3. Block a user"); //Remove from friends array if on there and add to blocked array
-            System.out.println("4. Send a message"); //Send a message to another user on the text file
-            System.out.println("5. View messages"); //Iterate through text file and retrieve messages that include user
-            System.out.println("6. Delete a message"); //Iterate through users messages in text file and remove from
-            System.out.println("7. Exit"); //End the program
+            System.out.println("1. Add a friend");
+            System.out.println("2. Remove a friend");
+            System.out.println("3. Block a user");
+            System.out.println("4. Send a message");
+            System.out.println("5. View messages");
+            System.out.println("6. Delete a message");
+            System.out.println("7. Search for a user"); // New option for searching a user and displaying their profile
+            System.out.println("8. Exit");
 
-            //Receive user input and continue to run methods corresponding to what option they chose
             int action = scanner.nextInt();
             scanner.nextLine();
 
-
             switch (action) {
-                case 1: // Add a friend
-
-                    //Receive a friends username
+                case 1:
                     System.out.println("Enter the username of the friend:");
                     String friendUsername = scanner.nextLine();
-
-                    //Run the database add friend method to add a friend in the currentUsers friend list,
-                    //this also adds the friend from the text file corresponding to the user
-
                     db.addFriend(currentUser.getUsername(), friendUsername);
                     break;
-
-
-                case 2: // Remove a friend
-
-                    //Receive friends username
+                case 2:
                     System.out.println("Enter the username of the friend to remove:");
                     friendUsername = scanner.nextLine();
-
-                    //Run the database method to remove the friend in the currentUsers friend list,
-                    //this also removes the friend from the text file corresponding to the user
                     db.removeFriend(currentUser.getUsername(), friendUsername);
-
                     break;
-                case 3: //Block a user
-
-                    //Receive a username
+                case 3:
                     System.out.println("Enter the username of the user to block:");
                     String blockUsername = scanner.nextLine();
-
-                    //Run the database method to add the user to the currentUsers blocked list,
-                    //this also adds the user to the blocked segment of the User in the text file
                     db.blockUser(currentUser.getUsername(), blockUsername);
                     break;
-
-
-                case 4: // Send a message
-
-                    //Receive the username of the directed user
+                case 4:
                     System.out.println("Enter the username of the receiver:");
                     String receiverUsername = scanner.nextLine();
-
-                    //Receive the content of the message
                     System.out.println("Enter your message:");
                     String messageContent = scanner.nextLine();
-
-                    //Create the message object from the user input of the user and content
-                    Message message = new Message
-                            (currentUser, db.findUserByUsername(receiverUsername), messageContent);
-                    db.storeMessage(message); //storeMessage method to add the message in the text file, in the
-                    // format sender, receiver, and content
-
-
+                    Message message = new Message(currentUser, db.findUserByUsername(receiverUsername), messageContent);
+                    db.storeMessage(message);
                     break;
-                case 5: // View messages
-                    db.viewMessages(currentUser.getUsername()); //Method to retreive all the messages that involve
-                    // the user
+                case 5:
+                    db.viewMessages(currentUser.getUsername());
                     break;
-
-                case 6: //Delete a message
-                    //Receive the user whose message you want to delete
+                case 6:
                     System.out.println("Enter the username of the receiver:");
-                    String receiver = scanner.nextLine();
-
-                    //Receive the content of the message
+                    receiverUsername = scanner.nextLine();
                     System.out.println("Enter your message:");
-                    String words = scanner.nextLine();
-
-                    db.deleteMessage(currentUser.getUsername(), receiver, words); //Method to delete the message from
-                    //the message list in the database while deleting message object in the text file
-
+                    messageContent = scanner.nextLine();
+                    db.deleteMessage(currentUser.getUsername(), receiverUsername, messageContent);
                     break;
-
-                case 7: //Exit the program
+                case 7:
+                    System.out.println("Enter the username to search:");
+                    String searchUsername = scanner.nextLine();
+                    db.searchUser(searchUsername);
+                    break;
+                case 8:
                     running = false;
                     break;
-
-                default: //Valid option was not chosen
+                default:
                     System.out.println("Invalid option. Please try again.");
                     break;
             }
         }
-        //Program was completed
         System.out.println("Thank you for using the platform. Goodbye!");
     }
 }
