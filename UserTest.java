@@ -112,6 +112,21 @@ public class UserTest {
         }
 
         @Test
+        public void testDisplay() {
+            String expected = "Username: username\n" +
+                    "Age: 20\n" +
+                    "Hobby: hockey\n" +
+                    "Location: West Lafayette\n" +
+                    "Friends: friend2\n" +
+                    "Blocked Users: ";
+            final java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
+            System.setOut(new java.io.PrintStream(outContent));
+            user.displayProfile();
+
+            assertEquals(expected, outContent.toString());
+        }
+
+        @Test
         public void testToFileString() {
             user.addFriend("friend1");
             user.addFriend("friend2");
