@@ -427,4 +427,12 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
         System.out.println("Thank you for using the platform. Goodbye!");
     }
+
+    public synchronized CopyOnWriteArrayList<User> getUsers() {
+        return users;
+    }
+
+    public synchronized CopyOnWriteArrayList<Message> getMessages() {
+        return messages;
+    }
 }
