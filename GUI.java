@@ -5,10 +5,27 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+/**
+ * GUI
+ *
+ * GUI methods
+ *
+ * @author Zhengyang Wang, wang6214@purdue.edu
+ * @version 1.0
+ **/
 public class GUI {
 
     public static void Welcome(PlatformDatabase db) {
+
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {
+
+            }
+        }));
 
         JFrame welcome = new JFrame("Welcome");
         welcome.setSize(600,500);
@@ -243,7 +260,7 @@ public class GUI {
                 try {
                     db.storeUser(user);
                 } catch (IOException exception) {
-                    exception.printStackTrace();
+                    throw new RuntimeException(exception);
                 }
                 JOptionPane.showMessageDialog(null,
                             "User Creation Successful",
@@ -303,7 +320,7 @@ public class GUI {
 
         JPanel action = new JPanel();
         action.setLayout(null);
-        Border border = (Border) BorderFactory.createLineBorder(Color.BLACK);
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
         action.setBorder(border);
         action.setBounds(10, 240, 365, 400);
         mainMenu.add(action);
@@ -320,36 +337,555 @@ public class GUI {
         addFriend.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddFriend(currentUser);
+                AddFriend(db, currentUser);
             }
         });
 
         JButton removeFriend = new JButton("Remove a friend");
-        removeFriend.setBounds(55, 125, 250, 30);
+        removeFriend.setBounds(55, 115, 250, 30);
         action.add(removeFriend);
+        removeFriend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RemoveFriend(db, currentUser);
+            }
+        });
 
         JButton blockUser = new JButton("Block a user");
-        blockUser.setBounds(55, 180, 250, 30);
+        blockUser.setBounds(55, 160, 250, 30);
         action.add(blockUser);
+        blockUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BlockUser(db, currentUser);
+            }
+        });
 
         JButton sendMessage = new JButton("Send a message");
-        sendMessage.setBounds(55, 235, 250, 30);
+        sendMessage.setBounds(55, 205, 250, 30);
         action.add(sendMessage);
+        sendMessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SendMessage(db, currentUser);
+            }
+        });
 
         JButton viewMessage = new JButton("View messages");
-        viewMessage.setBounds(55, 290, 250, 30);
+        viewMessage.setBounds(55, 250, 250, 30);
         action.add(viewMessage);
+        viewMessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ViewMessage(db, currentUser);
+            }
+        });
 
         JButton deleteMessage = new JButton("Delete a message");
-        deleteMessage.setBounds(55, 345, 250, 30);
+        deleteMessage.setBounds(55, 295, 250, 30);
         action.add(deleteMessage);
+        deleteMessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DeleteMessage(db, currentUser);
+            }
+        });
 
         JButton searchUser = new JButton("Search for a user");
-        searchUser.setBounds(55, 400, 250, 30);
+        searchUser.setBounds(55, 340, 250, 30);
         action.add(searchUser);
+        searchUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SearchUser(db, currentUser);
+            }
+        });
 
         mainMenu.setLocationRelativeTo(null);
         mainMenu.setVisible(true);
+
+    }
+
+    public static void AddFriend(PlatformDatabase db, User currentUser) {
+
+        JFrame addFriend = new JFrame("Action");
+        addFriend.setSize(500,300);
+        addFriend.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addFriend.setLayout(null);
+
+        JLabel add = new JLabel("Add a Friend");
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        add.setBorder(border);
+        add.setFont(new Font("Serif",Font.BOLD,30));
+        add.setBounds(10,10,180,50);
+        addFriend.add(add);
+
+        JLabel enter = new JLabel("Please Enter the Username");
+        enter.setFont(new Font("Serif",Font.BOLD,20));
+        enter.setBounds(50,80,300,40);
+        addFriend.add(enter);
+
+        JTextField username = new JTextField(0);
+        username.setBounds(50,140,350,20);
+        addFriend.add(username);
+
+        JButton confirm = new JButton("Confirm");
+        confirm.setBounds(350,180,100,50);
+        addFriend.add(confirm);
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String friend = username.getText();
+                if (friend.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Username cannot be empty",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (friend.equals(currentUser.getUsername())) {
+                    JOptionPane.showMessageDialog(null,
+                            "You Cannot Add Yourself",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                User checkFriend = db.findUserByUsername(friend);
+                if (checkFriend == null) {
+                    JOptionPane.showMessageDialog(null,
+                            "The User Does Not Exist",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                for (String friends : currentUser.getFriends()) {
+                    if (friends.equals(friend)) {
+                        JOptionPane.showMessageDialog(null,
+                                "You Have Added This User",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                try {
+                    db.addFriend(currentUser.getUsername(), friend);
+                    JOptionPane.showMessageDialog(null,
+                            "The User " + friend + " Was Added");
+                    addFriend.dispose();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        addFriend.setLocationRelativeTo(null);
+        addFriend.setVisible(true);
+
+    }
+
+    public static void RemoveFriend(PlatformDatabase db, User currentUser) {
+
+        JFrame removeFriend = new JFrame("Action");
+        removeFriend.setSize(500,300);
+        removeFriend.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        removeFriend.setLayout(null);
+
+        JLabel remove = new JLabel("Remove a Friend");
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        remove.setBorder(border);
+        remove.setFont(new Font("Serif",Font.BOLD,30));
+        remove.setBounds(10,10,230,50);
+        removeFriend.add(remove);
+
+        JLabel enter = new JLabel("Please Enter the Username");
+        enter.setFont(new Font("Serif",Font.BOLD,20));
+        enter.setBounds(50,80,300,40);
+        removeFriend.add(enter);
+
+        JTextField username = new JTextField(0);
+        username.setBounds(50,140,350,20);
+        removeFriend.add(username);
+
+        JButton confirm = new JButton("Confirm");
+        confirm.setBounds(350,180,100,50);
+        removeFriend.add(confirm);
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String friend = username.getText();
+                if (friend.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Username cannot be empty",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                for (String friends : currentUser.getFriends()) {
+                    if (friends.equals(friend)) {
+                        try {
+                            db.removeFriend(currentUser.getUsername(),friend);
+                            JOptionPane.showMessageDialog(null,
+                                    "The Friend " + friend + " Was Removed");
+                            removeFriend.dispose();
+                            return;
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }
+                JOptionPane.showMessageDialog(null,
+                        "This user is not your friend",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        removeFriend.setLocationRelativeTo(null);
+        removeFriend.setVisible(true);
+
+    }
+
+    public static void BlockUser(PlatformDatabase db, User currentUser) {
+
+        JFrame blockUser = new JFrame("Action");
+        blockUser.setSize(500,300);
+        blockUser.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        blockUser.setLayout(null);
+
+        JLabel block = new JLabel("Block a User");
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        block.setBorder(border);
+        block.setFont(new Font("Serif",Font.BOLD,30));
+        block.setBounds(10,10,170,50);
+        blockUser.add(block);
+
+        JLabel enter = new JLabel("Please Enter the Username");
+        enter.setFont(new Font("Serif",Font.BOLD,20));
+        enter.setBounds(50,80,300,40);
+        blockUser.add(enter);
+
+        JTextField username = new JTextField(0);
+        username.setBounds(50,140,350,20);
+        blockUser.add(username);
+
+        JButton confirm = new JButton("Confirm");
+        confirm.setBounds(350,180,100,50);
+        blockUser.add(confirm);
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String user = username.getText();
+                if (user.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Username cannot be empty",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                for (String friends : currentUser.getFriends()) {
+                    if (friends.equals(user)) {
+                        JOptionPane.showMessageDialog(null,
+                                "This user is your friend",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                if (user.equals(currentUser.getUsername())) {
+                    JOptionPane.showMessageDialog(null,
+                            "You Cannot Block Yourself",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                User checkUser = db.findUserByUsername(user);
+                if (checkUser == null) {
+                    JOptionPane.showMessageDialog(null,
+                            "The User Does Not Exist",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                for (String block : currentUser.getBlockedUsers()) {
+                    if (block.equals(user)) {
+                        JOptionPane.showMessageDialog(null,
+                                "You Have Blocked This User",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                try {
+                    db.blockUser(currentUser.getUsername(), user);
+                    JOptionPane.showMessageDialog(null,
+                            "The User " + user + " Was Blocked");
+                    blockUser.dispose();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        blockUser.setLocationRelativeTo(null);
+        blockUser.setVisible(true);
+
+    }
+
+    public static void SendMessage(PlatformDatabase db, User currentUser) {
+
+        JFrame sendMessage = new JFrame("Action");
+        sendMessage.setSize(500,300);
+        sendMessage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        sendMessage.setLayout(null);
+
+        JLabel send = new JLabel("Send a Message");
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        send.setBorder(border);
+        send.setFont(new Font("Serif",Font.BOLD,30));
+        send.setBounds(10,10,210,50);
+        sendMessage.add(send);
+
+        JLabel enterUsername = new JLabel("Please Enter the Receiver");
+        enterUsername.setFont(new Font("Serif",Font.BOLD,20));
+        enterUsername.setBounds(50,80,300,40);
+        sendMessage.add(enterUsername);
+
+        JTextField username = new JTextField(0);
+        username.setBounds(300,93,100,20);
+        sendMessage.add(username);
+
+        JLabel enterMessage = new JLabel("Please Enter the Message");
+        enterMessage.setFont(new Font("Serif",Font.BOLD,20));
+        enterMessage.setBounds(50,130,300,40);
+        sendMessage.add(enterMessage);
+
+        JTextField messageField = new JTextField(0);
+        messageField.setBounds(50,190,280,20);
+        sendMessage.add(messageField);
+
+        JButton confirm = new JButton("Confirm");
+        confirm.setBounds(350,180,100,50);
+        sendMessage.add(confirm);
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String receiver = username.getText();
+                String message = messageField.getText();
+                if (receiver.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Receiver cannot be empty",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (message.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Message cannot be empty",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                User checkReceiver = db.findUserByUsername(receiver);
+                if (checkReceiver == null) {
+                    JOptionPane.showMessageDialog(null,
+                            "The User Does Not Exist",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                for (String blocks : checkReceiver.getBlockedUsers()) {
+                    if (blocks.equals(currentUser.getUsername())) {
+                        JOptionPane.showMessageDialog(null,
+                                "You have blocked the user " + receiver,
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                for (String friends : currentUser.getFriends()) {
+                    if (friends.equals(receiver)) {
+                        Message newMessage = new Message(currentUser, checkReceiver, message);
+                        db.storeMessage(newMessage);
+                        JOptionPane.showMessageDialog(null,
+                                "Message Sent");
+                        sendMessage.dispose();
+                        return;
+                    }
+                }
+                JOptionPane.showMessageDialog(null,
+                        "You Are Not Friends",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        sendMessage.setLocationRelativeTo(null);
+        sendMessage.setVisible(true);
+
+    }
+
+    public static void ViewMessage(PlatformDatabase db, User currentUser) {
+
+        JFrame viewMessage = new JFrame("Action");
+        viewMessage.setSize(500,600);
+        viewMessage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        viewMessage.setLayout(null);
+
+        JLabel view = new JLabel("View Messages");
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        view.setBorder(border);
+        view.setFont(new Font("Serif",Font.BOLD,30));
+        view.setBounds(10,10,200,50);
+        viewMessage.add(view);
+
+        ArrayList<String> messages = new ArrayList<>();
+        for (Message message : db.getMessages()) {
+            if (message.getSender().equals(currentUser)) {
+                messages.add("You sent to " + message.getReceiver().getUsername() + ": " + message.getMessageToBeSent());
+            }
+            if (message.getReceiver().equals(currentUser)) {
+                messages.add("The user " + message.getSender().getUsername() + " send to you: " + message.getMessageToBeSent());
+            }
+        }
+        String[] message = new String[messages.size()];
+        for (int i = 0; i < messages.size(); i++) {
+            message[i] = messages.get(i);
+        }
+        JList<String> list = new JList<>(message);
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setBounds(10,80,470,460);
+        viewMessage.add(scrollPane);
+
+        viewMessage.setLocationRelativeTo(null);
+        viewMessage.setVisible(true);
+
+    }
+
+    public static void DeleteMessage(PlatformDatabase db, User currentUser) {
+
+        JFrame deleteMessage = new JFrame("Action");
+        deleteMessage.setSize(500,600);
+        deleteMessage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        deleteMessage.setLayout(null);
+
+        JLabel delete = new JLabel("Delete a Message");
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        delete.setBorder(border);
+        delete.setFont(new Font("Serif",Font.BOLD,30));
+        delete.setBounds(10,10,230,50);
+        deleteMessage.add(delete);
+
+        ArrayList<String> messages = new ArrayList<>();
+        for (Message message : db.getMessages()) {
+            if (message.getSender().equals(currentUser)) {
+                messages.add("You sent to " + message.getReceiver().getUsername() + ": " + message.getMessageToBeSent());
+            }
+            if (message.getReceiver().equals(currentUser)) {
+                messages.add("The user " + message.getSender().getUsername() + " send to you: " + message.getMessageToBeSent());
+            }
+        }
+        String[] message = new String[messages.size()];
+        for (int i = 0; i < messages.size(); i++) {
+            message[i] = messages.get(i);
+        }
+        JList<String> list = new JList<>(message);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setBounds(10,80,470,400);
+        deleteMessage.add(scrollPane);
+
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.setBounds(350,500,100,50);
+        deleteMessage.add(deleteButton);
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selected = list.getSelectedValue();
+                if (selected == null) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please Select a Message",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                selected = selected.substring(selected.indexOf(':') + 2);
+                for (Message mes : db.getMessages()) {
+                    if (mes.getMessageToBeSent().equals(selected)) {
+                        db.getMessages().remove(mes);
+                        try {
+                            db.rewriteMessageFile();
+                            JOptionPane.showMessageDialog(null,
+                                    "Message Deleted");
+                            deleteMessage.dispose();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }
+            }
+        });
+
+        deleteMessage.setLocationRelativeTo(null);
+        deleteMessage.setVisible(true);
+
+    }
+
+    public static void SearchUser(PlatformDatabase db, User currentUser) {
+
+        JFrame searchUser = new JFrame("Action");
+        searchUser.setSize(500,300);
+        searchUser.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        searchUser.setLayout(null);
+
+        JLabel search = new JLabel("Search a User");
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        search.setBorder(border);
+        search.setFont(new Font("Serif",Font.BOLD,30));
+        search.setBounds(10,10,190,50);
+        searchUser.add(search);
+
+        JLabel enter = new JLabel("Please Enter the Username");
+        enter.setFont(new Font("Serif",Font.BOLD,20));
+        enter.setBounds(50,80,300,40);
+        searchUser.add(enter);
+
+        JTextField username = new JTextField(0);
+        username.setBounds(50,140,350,20);
+        searchUser.add(username);
+
+        JButton confirm = new JButton("Confirm");
+        confirm.setBounds(350,180,100,50);
+        searchUser.add(confirm);
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = username.getText();
+                if (name.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Username cannot be empty",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                for (User users : db.getUsers()) {
+                    if (users.getUsername().equals(name)) {
+                        JOptionPane.showMessageDialog(null,
+                                "Username: " + name + "\n" +
+                                        "Age: " + users.getAge() + "\n" +
+                                        "Hobby: " + users.getHobby() + "\n" +
+                                        "Location: " + users.getLocation() + "\n",
+                                "Profile",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                }
+                JOptionPane.showMessageDialog(null,
+                        "The User Does Not Exist",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        searchUser.setLocationRelativeTo(null);
+        searchUser.setVisible(true);
 
     }
 
