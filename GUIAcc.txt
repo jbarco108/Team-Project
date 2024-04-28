@@ -1,3 +1,1 @@
-user1,1,20,coding,Lafayette,friends:user2,blocked:user3
-user2,2,19,sleep,US,friends:user1,blocked:
-user3,3,22,read,CN,friends:,blocked:user1
+
