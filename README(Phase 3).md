@@ -2,9 +2,9 @@ Team Project Phase 3
 
 For this project, all processing should be done client side. Please compile all the classes and run the Client class. Before doing this, please create completely blank files GUIAcc.txt and GUIMess.txt.
 
-Jocge Barco - Submitted Vocareum workspace
+Jorge Barco - Submitted Vocareum workspace
 Alston Zhang - Submitted Presentation on Brightspace
-- Submitted Report on Brightspace
+Jorge Barco - Submitted Report on Brightspace
 
 For Phase 3 we completed the GUI implement by Client class. Before running Client class, please run Server class. If you successfully connect to the server, the Welcome panel will pop up with two buttons: Login and Sign Up. 
 
