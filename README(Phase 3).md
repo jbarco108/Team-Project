@@ -1,6 +1,6 @@
 Team Project Phase 3
 
-For this project, all processing should be done client side. Please compile all the classes and run the Client class. Before doing this, please create completely blank files Accounts.txt and Messages.txt.
+For this project, all processing should be done client side. Please compile all the classes and run the Client class. Before doing this, please create completely blank files GUIAcc.txt and GUIMess.txt.
 
 Jocge Barco - Submitted Vocareum workspace
 Alston Zhang - Submitted Presentation on Brightspace
