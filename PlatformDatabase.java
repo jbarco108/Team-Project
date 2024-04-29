@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -267,7 +266,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
 
         // Message creation and saving to the text file
         System.out.println("Message created successfully: " + newMessage.getMessageToBeSent());
-        try (PrintWriter writer = new PrintWriter(new FileWriter("Messages.txt", true))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("GUIMess.txt", true))) {
             writer.print(newMessage.getSender().getUsername() + ",");
             writer.print(newMessage.getReceiver().getUsername() + ",");
             writer.print(newMessage.getMessageToBeSent() + ",");
@@ -324,6 +323,14 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         } else {
             System.out.println("User not found.");
         }
+    }
+
+    public CopyOnWriteArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public CopyOnWriteArrayList<User> getUsers() {
+        return users;
     }
 
 
@@ -426,13 +433,5 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
             }
         }
         System.out.println("Thank you for using the platform. Goodbye!");
-    }
-
-    public synchronized CopyOnWriteArrayList<User> getUsers() {
-        return users;
-    }
-
-    public synchronized CopyOnWriteArrayList<Message> getMessages() {
-        return messages;
     }
 }
