@@ -2,7 +2,7 @@ Team Project Phase 2
 
 For this project, all processing should be done client side. Please compile all the classes and run the MainMethod class. Before doing this, please create completely blank files Accounts.txt and Messages.txt.
 
-Jocge Barco - Submitted Vocareum workspace, client side and missed methods
+Jorge Barco - Submitted Vocareum workspace, client side and missed methods
 Alston Zhang - server side implementation
 Chethan Adusumilli - client side and missed methods
 Zhengyang Wang - test cases and readme
