@@ -1,0 +1,3 @@
+username,password,20,hockey,West Lafayette,friends:friend1;friend2;username2,blocked:block1
+username2,password2,21,soccer,DC,friends:username,blocked:
+username4,password4,23,basketball,Chicago,friends:,blocked:username
