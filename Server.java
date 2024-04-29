@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server implements Runnable {
     private Socket socket;
@@ -28,8 +29,8 @@ public class Server implements Runnable {
 
             switch (requestType) {
                 case 1, 2, 3, 7, 8:
-                    ArrayList<User> users = db.getUsers();
-                    ArrayList<String> usernames = new ArrayList<>();
+                    CopyOnWriteArrayList<User> users = db.getUsers();
+                    CopyOnWriteArrayList<String> usernames = new CopyOnWriteArrayList<>();
 
                     for (User user : users) {
                         usernames.add(user.getUsername()); // Assuming User class has a getUsername() method
@@ -41,7 +42,7 @@ public class Server implements Runnable {
 
                 case 4, 5, 6:
                     // Retrieve the list of messages from the database
-                    ArrayList<Message> messages = db.getMessages();
+                    CopyOnWriteArrayList<Message> messages = db.getMessages();
 
                     // Convert the list of messages into a list of strings
                     ArrayList<String> messageStrings = new ArrayList<>();

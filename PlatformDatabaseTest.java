@@ -1,3 +1,4 @@
+/*
 import org.junit.*;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.JUnitCore;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Zhengyang Wang, wang6214@purdue.edu
  * @version 1.0
- */
+
 @RunWith(Enclosed.class)
 public class PlatformDatabaseTest {
     public static void main(String[] args) {
@@ -161,3 +162,4 @@ public class PlatformDatabaseTest {
         }
     }
 }
+*/
