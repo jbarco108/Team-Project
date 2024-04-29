@@ -7,9 +7,10 @@ import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
 import static org.junit.Assert.*;
+
 /**
  * MessageTest
- *
+ * <p>
  * Testing the constructors, getters, and setters
  * of the message class
  *
@@ -70,7 +71,6 @@ public class MessageTest {
             assertEquals("Message should match the one passed to constructor", "Hello, world!", message.getMessageToBeSent());
             assertTrue("Send should be successful with parameterized constructor", message.sendSuccessful);
         }
-
 
 
         @Test

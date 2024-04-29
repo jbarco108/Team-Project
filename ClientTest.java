@@ -4,9 +4,10 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
+
 /**
  * ClientTest
- *
+ * <p>
  * Testing the connection and implementation
  * of the Client class
  *
@@ -26,6 +27,7 @@ public class ClientTest {
             }
         }
     }
+
     public static class TestCase extends junit.framework.TestCase {
         private Client client;
 

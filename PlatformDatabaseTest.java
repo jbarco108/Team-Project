@@ -1,5 +1,7 @@
-/*
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -11,14 +13,16 @@ import java.io.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * PlatformDatabaseTest
- *
+ * <p>
  * Testing the methods
  * of the PlatformDatabase class
  *
  * @author Zhengyang Wang, wang6214@purdue.edu
  * @version 1.0
+ **/
 
 @RunWith(Enclosed.class)
 public class PlatformDatabaseTest {
@@ -32,6 +36,7 @@ public class PlatformDatabaseTest {
             }
         }
     }
+
     public static class TestCase {
         private final PrintStream originalOutput = System.out;
         private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -162,4 +167,3 @@ public class PlatformDatabaseTest {
         }
     }
 }
-*/

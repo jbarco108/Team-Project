@@ -18,7 +18,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
     private String messageIn; // The source file for messages
 
     private CopyOnWriteArrayList<User> users = new CopyOnWriteArrayList<>(); // Initialized as empty list for users
-    private CopyOnWriteArrayList<Message> messages =  new CopyOnWriteArrayList<>(); //Initialized as empty list for messages
+    private CopyOnWriteArrayList<Message> messages = new CopyOnWriteArrayList<>(); //Initialized as empty list for messages
 
 
     // Constructor, getters, and setters would follow
@@ -277,7 +277,6 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
     }
 
 
-
     public synchronized void viewMessages(String username) { // View messages according to specific user
         System.out.println("Messages for " + username + ":");
         for (Message message : messages) { //iterate through each message ever created and retrieve message specific
@@ -292,8 +291,7 @@ public class PlatformDatabase implements Platform { //Constructor of the databas
         }
     }
 
-    public synchronized void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException
-    {
+    public synchronized void deleteMessage(String senderUsername, String receiverUsername, String messageContent) throws IOException {
         // Identify the message to delete bases on username, receiver and messageContent
         Message messageToDelete = null;
         for (Message message : messages) { //iterate through each massage

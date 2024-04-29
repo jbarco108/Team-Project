@@ -13,7 +13,6 @@ public class Message implements MessageClassInterface {
     private User receiver; //user class ; who is the receiver of the message
 
 
-
     public Message(User sender, User receiver, String message) { //intended constructor.
         this.sendSuccessful = true;
         this.messageToBeSent = message;

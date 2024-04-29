@@ -7,9 +7,10 @@ import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
 import static org.junit.Assert.*;
+
 /**
  * UserTest
- *
+ * <p>
  * Testing the constructors, getters, setters
  * and methods of the user class
  *
